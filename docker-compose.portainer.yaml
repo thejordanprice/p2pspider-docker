@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - p2pspider_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - p2pspider_network
+
+  app:
+    image: thejordanprice/p2pspider:latest
+    container_name: p2pspider
+    ports:
+      - "${SITE_PORT:-8080}:${SITE_PORT:-8080}"
+    environment:
+      REDIS_URI: ${REDIS_URI:-redis://redis:6379}
+      MONGO_URI: ${MONGO_URI:-mongodb://mongodb:27017/magnetdb}
+      SITE_HOSTNAME: ${SITE_HOSTNAME:-127.0.0.1}
+      SITE_NAME: ${SITE_NAME:-DHT Spider}
+      SITE_PORT: ${SITE_PORT:-8080}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - p2pspider_network
+
+networks:
+  p2pspider_network:
+    driver: bridge
