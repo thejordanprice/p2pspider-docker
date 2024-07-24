@@ -6,6 +6,9 @@ services:
     container_name: mongodb
     ports:
       - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_configdb:/data/configdb
     networks:
       - p2pspider_network
 
@@ -14,6 +17,8 @@ services:
     container_name: redis
     ports:
       - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - p2pspider_network
 
@@ -39,3 +44,8 @@ services:
 networks:
   p2pspider_network:
     driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_configdb:
+  redis_data:
